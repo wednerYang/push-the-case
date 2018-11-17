@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #ccc;
+        }
+
+        #box {
+            width: 480px;
+            height: 360px;
+            margin: 100px auto;
+            /* background-color: green; */
+        }
+
+        #box div {
+            width: 40px;
+            height: 40px;
+            /* background-color: pink; */
+            float: left;
+        }
+
+        /* tyle1 : 目标位置 */
+
+        /* tyle2 : 可走位置 */
+
+        /* tyle3 : 墙 */
+
+        /* tyle4 : 箱子 */
+        .pusher {
+            width: 40px;
+            height: 40px;
+            background: url('./pikaqiu.jpg') greenyellow;
+            
+            background-size: cover;
+        }
+
+        .type1 {
+            background-color: pink;
+        }
+
+        .type2 {
+            background-color: greenyellow;
+        }
+
+        .type3 {
+            background-color: rgb(2, 13, 66);
+        }
+
+        .type4 {
+            box-sizing: border-box;
+            background-color: brown;
+            border: 1px solid black;
+        }
+
+
+
+        select {
+            width: 100px;
+            height: 30px;
+            position: relative;
+            left: 30px;
+            top: 30px;
+        }
+
+        button {
+            width: 50px;
+            height: 30px;
+            position: relative;
+            left: 30px;
+            top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <select name="select" id="selectLev">
+        <option value="1">第1关</option>
+        <option value="2">第2关</option>
+        <option value="3">第3关</option>
+        <option value="4">第4关</option>
+        <option value="5">第5关</option>
+        <option value="6">第6关</option>
+        <option value="7">第7关</option>
+        <option value="8">第8关</option>
+        <option value="9">第9关</option>
+        <option value="10">第10关</option> 
+    </select>
+    <button id="btn">确认</button>
+    <button id="restart">重玩</button>
+    <div id="box">
+        <!-- 创建一个12*8的格子 -->
+        <!-- 第1行 -->
+        <!-- <div class="pusher"></div> -->
+        <!-- <div class="type1"></div> -->
+        <!-- <div class="type2"></div> -->
+        <!-- <div class="type3"></div> -->
+        <!-- <div class="type4"></div> -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第2行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第3行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第4行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第5行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第6行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第7行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第8行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <!-- 第9行 -->
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</body>
+<script src="./jquery-1.12.4.min.js"></script>
+<script src="./data.js"></script>
+<script>
+    var box = $('#box div');
+    var level = 0; //关卡等级0-9级
+    var col = 12; //上下移动的移动距离
+    var position; //pusher所在的格子
+    
+
+    // 将地图渲染到页面上
+    map();
+
+    //选择关卡
+    $('#btn').click(function(){
+        level = $('#selectLev').val() - 1;
+        map();
+    })
+
+    //重玩按钮
+    $('#restart').click(function(){
+        map();
+    })
+
+
+
+    //渲染游戏地图的函数封装
+    function map() {
+        //先给box里面所有的div去除class属性
+        box.each(function (index, ele) {
+            $(ele).removeClass();
+        });
+        //给box里面所有的div按照builder排列加上class属性
+        box.each(function (index, ele) {
+            if (builder[level][index] == 4) {
+                $(ele).addClass(' type' + 2);
+            }
+            $(ele).addClass(' type' + builder[level][index]);
+        })
+        // 将皮卡丘渲染到地图上的指定位置
+        position = origin[level];
+        box.eq(position).addClass(' pusher');
+
+    }
+
+
+    // pusher的移动按键
+    $(window).keydown(function (e) {
+        var key = e.keyCode;
+        switch (key) {
+            //方向键上或者w
+            case 87:
+            case 38:
+                move(-col);
+                break;
+                //方向键下或者s
+            case 83:
+            case 40:
+                move(col);
+                break;
+                //方向键左或者a
+            case 65:
+            case 37:
+                move(-1);
+                break;
+                //方向键右或者d
+            case 68:
+            case 39:
+                move(1);
+                break;
+        }
+    })
+
+    //推箱子者和箱子移动的函数封装
+    function move(step) {
+        // pusher目前的位置
+        var pusher1 = position; //pusher目前的位置
+        var pusher2 = position + step; //pusher下一步的位置
+        var pusher1Color = box.eq(pusher1).css('backgroundColor');
+        var pusher2Color = box.eq(pusher2).css('backgroundColor');
+        // if(defaultColor == 'rgb(165, 42, 42)'){
+        //     defaultColor = 'greenyellow';
+        //     console.log(111);
+        // }
+        // if(defaultColor=='pink'){
+        //     var color = 'pink';
+        // }else{
+        //     var color = 'greenyellow';
+        // }
+        // console.log(box.eq(pusher2).css('backgroundColor'));
+        var pushbox = position + step * 2; //箱子下一步的位置
+        //如果pusher没有推箱子，并且在可行走区域或目标位置移动
+        if (!box.eq(pusher2).hasClass('type4') && (box.eq(pusher2).hasClass('type1') || box.eq(pusher2).hasClass(
+                'type2'))) {
+            //pusher从当前位置挪到下一个位置
+            box.eq(pusher1).removeClass('pusher');
+            box.eq(pusher2).addClass(' pusher');
+            position = pusher2;
+        }
+        //如果pusher有推箱子，并且在可走区域或者目标位置移动,且箱子不能推到一起
+        else if (box.eq(pusher2).hasClass('type4') && (box.eq(pushbox).hasClass('type1') || box.eq(pushbox).hasClass(
+                'type2')) && !box.eq(pushbox).hasClass('type4')) {
+            //pushbox也从当前位置挪到下一个位置
+            box.eq(pusher2).removeClass('type4');
+            box.eq(pushbox).addClass(' type4');
+            //pusher从当前位置挪到下一个位置
+            box.eq(pusher1).removeClass('pusher');
+            box.eq(pusher2).addClass(' pusher');
+            position = pusher2;
+        }
+        // $('.pusher').css('backgroundColor',color);
+        // box.eq(pusher2).css('backgroundColor',defaultColor);
+        win();
+
+    }
+
+    function win() {
+        //游戏成功的判断
+        if ($('.type1.type4').length == goalList[level]) {
+            if (level < 9) {
+                alert('恭喜你过关，进入下一关！');
+                level++;
+                $('#selectLev').val(level+1);
+                map();
+            } else {
+                alert('恭喜你，游戏通关！');
+            }
+        }
+    }
+</script>
+
+</html>
